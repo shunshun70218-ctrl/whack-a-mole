@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秀朗 415 全班合照 · 打地鼠</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: linear-gradient(180deg, #88d8ff 0%, #c7eaff 35%, #b9e08c 60%, #6cae4f 100%);
+    margin: 0;
+    min-height: 100vh;
+    padding: 1.5rem 1rem 3rem;
+    color: #2a2a2a;
+  }
+  h1 {
+    text-align: center;
+    margin: 0.3rem 0 0.2rem;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.6);
+  }
+  .subtitle {
+    text-align: center;
+    color: #2a4a1a;
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+    opacity: 0.85;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .card .photo {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f5d5b5;
+    border: 3px solid #d04317;
+  }
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card .name {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #57606a;
+    font-weight: 700;
+  }
+  .total {
+    text-align: center;
+    margin-top: 1.4rem;
+    font-size: 1rem;
+    color: #2a4a1a;
+    font-weight: 700;
+  }
+  .back {
+    display: block;
+    text-align: center;
+    margin-top: 1.2rem;
+  }
+  .back a {
+    display: inline-block;
+    background: #ff9c1c;
+    color: white;
+    text-decoration: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: 0 4px 0 #c47215;
+  }
+  .back a:active { transform: translateY(2px); box-shadow: 0 2px 0 #c47215; }
+</style>
+</head>
+<body>
+  <h1>🥊 秀朗 415 全班合照 📸</h1>
+  <div class="subtitle">打地鼠遊戲裡會輪流冒出的 13 位同學</div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="total" id="total"></div>
+
+  <div class="back">
+    <a href="index.html">▶️ 回到打地鼠</a>
+  </div>
+
+<script>
+  const FACES = [
+    'face-01.jpg', 'face-02.jpg', 'face-03.jpg', 'face-04.jpg',
+    'face-05.jpg', 'face-06.jpg', 'face-07.jpg', 'face-08.jpg',
+    'face-09.jpg', 'face-10.jpg', 'face-11.jpg', 'face-12.jpg',
+    'face-13.jpg'
+  ];
+  const grid = document.getElementById('grid');
+  FACES.forEach((src, i) => {
+    const num = String(i + 1).padStart(2, '0');
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="photo"><img src="${src}" alt="同學 ${num}" loading="lazy"></div>
+      <div class="name">No. ${num}</div>
+    `;
+    grid.appendChild(div);
+  });
+  document.getElementById('total').textContent = `共 ${FACES.length} 人`;
+</script>
+</body>
+</html>

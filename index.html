@@ -277,6 +277,21 @@
     box-shadow: 0 4px 0 #b3c5a0;
   }
   button.secondary:active { box-shadow: 0 2px 0 #b3c5a0; }
+  .link-btn {
+    background: white;
+    color: #2a4a1a;
+    padding: 0.65rem 1.4rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 0 #b3c5a0;
+    transition: transform .1s, box-shadow .1s;
+    display: inline-flex;
+    align-items: center;
+  }
+  .link-btn:hover { transform: translateY(-1px); }
+  .link-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #b3c5a0; }
 
   /* overlays */
   .overlay {
@@ -485,6 +500,7 @@
     <button id="start">▶️ 開始遊戲</button>
     <button id="sound" class="secondary">🔊 音效：開</button>
     <button id="music" class="secondary">🎵 音樂：開</button>
+    <a href="all.html" class="link-btn">📸 看全班</a>
   </div>
 
   <div class="overlay" id="start-screen">
