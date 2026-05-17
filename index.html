@@ -608,8 +608,12 @@
   const $ = id => document.getElementById(id);
   const board = $('board');
 
-  // 5 張臉,每輪會洗牌一次,5 張都出現過才開始下一輪
-  const FACES = ['head.png', 'face-teacher.jpg', 'face-long.jpg', 'face-fu.jpg', 'face-er.jpg'];
+  // 10 張臉,每輪會洗牌一次,10 張都出現過才開始下一輪
+  const FACES = [
+    'head.png',
+    'face-teacher.jpg', 'face-long.jpg', 'face-fu.jpg', 'face-er.jpg',
+    'face-7.jpg', 'face-8.jpg', 'face-10.jpg', 'face-11.jpg', 'face-12.jpg'
+  ];
   let faceBag = [];
   function nextFace() {
     if (faceBag.length === 0) {
