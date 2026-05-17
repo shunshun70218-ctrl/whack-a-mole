@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>秀朗 415 全班合照 · 打地鼠</title>
+<title>秀朗 415 小美女 · 打地鼠</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -91,8 +91,8 @@
 </style>
 </head>
 <body>
-  <h1>🥊 秀朗 415 全班合照 📸</h1>
-  <div class="subtitle">打地鼠遊戲裡會輪流冒出的 13 位同學</div>
+  <h1>💖 秀朗 415 小美女 💖</h1>
+  <div class="subtitle">打地鼠遊戲裡會輪流冒出的老師 + 13 位同學</div>
 
   <div class="grid" id="grid"></div>
 
@@ -103,24 +103,34 @@
   </div>
 
 <script>
-  const FACES = [
-    'face-01.jpg', 'face-02.jpg', 'face-03.jpg', 'face-04.jpg',
-    'face-05.jpg', 'face-06.jpg', 'face-07.jpg', 'face-08.jpg',
-    'face-09.jpg', 'face-10.jpg', 'face-11.jpg', 'face-12.jpg',
-    'face-13.jpg'
+  // 每筆: [檔名, 顯示標籤]
+  const ROSTER = [
+    ['face-01.jpg', '老師'],
+    ['face-02.jpg', '學號 21'],
+    ['face-03.jpg', '學號 16'],
+    ['face-04.jpg', '學號 25'],
+    ['face-05.jpg', '學號 17'],
+    ['face-06.jpg', '學號 24'],
+    ['face-07.jpg', '學號 15'],
+    ['face-08.jpg', '學號 19'],
+    ['face-09.jpg', '學號 23'],
+    ['face-10.jpg', '學號 22'],
+    ['face-11.jpg', '學號 20'],
+    ['face-12.jpg', '學號 18'],
+    ['face-13.jpg', '學號 26'],
+    ['face-14.jpg', '學號 27'],
   ];
   const grid = document.getElementById('grid');
-  FACES.forEach((src, i) => {
-    const num = String(i + 1).padStart(2, '0');
+  ROSTER.forEach(([src, label]) => {
     const div = document.createElement('div');
     div.className = 'card';
     div.innerHTML = `
-      <div class="photo"><img src="${src}" alt="同學 ${num}" loading="lazy"></div>
-      <div class="name">No. ${num}</div>
+      <div class="photo"><img src="${src}" alt="${label}" loading="lazy"></div>
+      <div class="name">${label}</div>
     `;
     grid.appendChild(div);
   });
-  document.getElementById('total').textContent = `共 ${FACES.length} 人`;
+  document.getElementById('total').textContent = `共 ${ROSTER.length} 人`;
 </script>
 </body>
 </html>
