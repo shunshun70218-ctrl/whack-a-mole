@@ -483,6 +483,7 @@
   <div class="controls">
     <button id="start">▶️ 開始遊戲</button>
     <button id="sound" class="secondary">🔊 音效：開</button>
+    <button id="music" class="secondary">🎵 音樂：開</button>
   </div>
 
   <div class="overlay" id="start-screen">
@@ -682,6 +683,8 @@
   let running = false;
   let spawnTimer = null, countdownTimer = null, endAt = 0;
   let soundOn = true;
+  let musicOn = true;
+  let bgmTimer = null, bgmIndex = 0;
 
   $('best').textContent = best;
   $('best-2').textContent = best;
@@ -700,6 +703,60 @@
       g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
       o.stop(audioCtx.currentTime + duration);
     } catch (e) {}
+  }
+
+  // ===== 8-bit BGM =====
+  // 32 音的可愛循環:C-F-G-C 大調進行(每 8 音換一個和弦)
+  const BGM_MELODY = [
+    // I (C) — C E G C G E C E
+    523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25, 659.25,
+    // IV (F) — F A C F C A F A
+    698.46, 880.00, 1046.50, 1396.91, 1046.50, 880.00, 698.46, 880.00,
+    // V (G) — G B D G D B G B
+    783.99, 987.77, 1174.66, 1567.98, 1174.66, 987.77, 783.99, 987.77,
+    // I (C) 回主和弦
+    523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25, 659.25,
+  ];
+  // 每個小節開頭撥一個低音,讓和弦感更厚
+  const BGM_BASS = [130.81, 174.61, 196.00, 130.81]; // C3 F3 G3 C3
+
+  function bgmTone(freq, duration, type, vol) {
+    if (!musicOn) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.value = vol;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      o.stop(audioCtx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  function bgmStep() {
+    if (!musicOn || !running) { bgmTimer = null; return; }
+    // 旋律:三角波,音量比 SFX 低很多
+    bgmTone(BGM_MELODY[bgmIndex], 0.18, 'triangle', 0.05);
+    // 每 8 音(小節開頭)補一個低音
+    if (bgmIndex % 8 === 0) {
+      bgmTone(BGM_BASS[(bgmIndex / 8) | 0], 0.55, 'sawtooth', 0.035);
+    }
+    bgmIndex = (bgmIndex + 1) % BGM_MELODY.length;
+    // 最後 10 秒加快節奏製造緊張感
+    const tempo = timeLeft <= 10 ? 140 : 220;
+    bgmTimer = setTimeout(bgmStep, tempo);
+  }
+
+  function startBgm() {
+    stopBgm();
+    bgmIndex = 0;
+    bgmStep();
+  }
+
+  function stopBgm() {
+    if (bgmTimer) { clearTimeout(bgmTimer); bgmTimer = null; }
   }
 
   function spawn() {
@@ -775,6 +832,7 @@
     running = true;
     endAt = performance.now() + ROUND_MS;
     if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+    if (musicOn) startBgm();
     spawn();
     countdownTimer = setInterval(() => {
       const left = Math.max(0, Math.ceil((endAt - performance.now()) / 1000));
@@ -787,6 +845,7 @@
 
   function end() {
     running = false;
+    stopBgm();
     if (spawnTimer) clearTimeout(spawnTimer);
     if (countdownTimer) clearInterval(countdownTimer);
     for (const idx of [...active.keys()]) hideMole(idx, false);
@@ -811,6 +870,14 @@
   $('sound').addEventListener('click', () => {
     soundOn = !soundOn;
     $('sound').textContent = soundOn ? '🔊 音效：開' : '🔇 音效：關';
+  });
+  $('music').addEventListener('click', () => {
+    musicOn = !musicOn;
+    $('music').textContent = musicOn ? '🎵 音樂：開' : '🎵 音樂：關';
+    if (running) {
+      if (musicOn) startBgm();
+      else stopBgm();
+    }
   });
 })();
 </script>
