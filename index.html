@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>打地鼠 · Whack-a-Mole</title>
+<title>秀朗 415 的大亂鬥！· 打地鼠</title>
 <style>
   :root {
     --grass-dark: #4a8a3a;
@@ -314,6 +314,82 @@
 
   footer { margin-top: 1rem; color: #2a4a1a; font-size: 0.8rem; text-align: center; opacity: 0.8; }
 
+  /* ========== 可愛插圖背景裝飾 ========== */
+  .decor {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .decor svg { position: absolute; }
+  /* 主要內容要浮在裝飾上面 */
+  body > h1, body > .subtitle, body > .hud, body > .board, body > .controls, body > footer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .sun {
+    top: 14px;
+    right: 18px;
+    width: clamp(60px, 9vw, 84px);
+    height: clamp(60px, 9vw, 84px);
+    animation: sun-spin 24s linear infinite;
+    filter: drop-shadow(0 4px 10px rgba(255,180,30,0.45));
+  }
+  @keyframes sun-spin { to { transform: rotate(360deg); } }
+
+  .cloud { opacity: 0.95; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.08)); }
+  .cloud-1 {
+    top: 80px; left: 4%;
+    width: clamp(90px, 14vw, 140px);
+    animation: cloud-drift-1 24s ease-in-out infinite;
+  }
+  .cloud-2 {
+    top: 170px; right: 6%;
+    width: clamp(70px, 11vw, 110px);
+    animation: cloud-drift-2 30s ease-in-out infinite;
+  }
+  @keyframes cloud-drift-1 {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(30px); }
+  }
+  @keyframes cloud-drift-2 {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(-26px); }
+  }
+
+  .butterfly {
+    width: 46px; height: 46px;
+    top: 50%; left: 8%;
+    animation: butterfly-fly 16s ease-in-out infinite;
+    transform-origin: 50% 50%;
+  }
+  .butterfly .wing {
+    transform-origin: 23px 23px;
+    animation: butterfly-flap 0.32s ease-in-out infinite alternate;
+  }
+  .butterfly .wing.right { animation-delay: 0s; }
+  .butterfly .wing.left  { transform: scaleX(-1); transform-origin: 23px 23px; }
+  @keyframes butterfly-flap {
+    from { transform: scaleX(1) rotateY(0deg); }
+    to   { transform: scaleX(1) rotateY(60deg); }
+  }
+  @keyframes butterfly-fly {
+    0%   { transform: translate(0, 0) rotate(-8deg); }
+    25%  { transform: translate(40px, -30px) rotate(6deg); }
+    50%  { transform: translate(120px, 10px) rotate(-4deg); }
+    75%  { transform: translate(50px, 50px) rotate(8deg); }
+    100% { transform: translate(0, 0) rotate(-8deg); }
+  }
+
+  @media (max-width: 480px) {
+    .sun { width: 56px; height: 56px; top: 8px; right: 8px; }
+    .cloud-1 { top: 60px; width: 80px; }
+    .cloud-2 { top: 130px; width: 64px; }
+    .butterfly { width: 36px; height: 36px; }
+  }
+
   @media (max-width: 480px) {
     h1 { font-size: 1.3rem; }
     .controls button { padding: 0.55rem 1rem; font-size: 0.9rem; }
@@ -323,8 +399,77 @@
 </style>
 </head>
 <body>
-  <h1>🎯 打 地 鼠 🔨</h1>
-  <div class="subtitle">點到她就 +1，連擊有獎勵！</div>
+  <!-- 可愛背景裝飾:太陽 + 雲朵 + 蝴蝶 -->
+  <div class="decor" aria-hidden="true">
+    <!-- 太陽(笑臉) -->
+    <svg class="sun" viewBox="0 0 80 80">
+      <g stroke="#ffb71c" stroke-width="4" stroke-linecap="round">
+        <line x1="40" y1="4"  x2="40" y2="14"/>
+        <line x1="40" y1="66" x2="40" y2="76"/>
+        <line x1="4"  y1="40" x2="14" y2="40"/>
+        <line x1="66" y1="40" x2="76" y2="40"/>
+        <line x1="14" y1="14" x2="21" y2="21"/>
+        <line x1="59" y1="59" x2="66" y2="66"/>
+        <line x1="14" y1="66" x2="21" y2="59"/>
+        <line x1="59" y1="21" x2="66" y2="14"/>
+      </g>
+      <circle cx="40" cy="40" r="20" fill="#ffd24a" stroke="#ffb71c" stroke-width="2"/>
+      <circle cx="33" cy="38" r="2.2" fill="#7a4a00"/>
+      <circle cx="47" cy="38" r="2.2" fill="#7a4a00"/>
+      <path d="M 32 44 Q 40 50 48 44" stroke="#7a4a00" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="30" cy="46" r="2" fill="#ff8da1" opacity="0.6"/>
+      <circle cx="50" cy="46" r="2" fill="#ff8da1" opacity="0.6"/>
+    </svg>
+
+    <!-- 雲朵 1 -->
+    <svg class="cloud cloud-1" viewBox="0 0 110 60">
+      <ellipse cx="28" cy="36" rx="20" ry="14" fill="white"/>
+      <ellipse cx="55" cy="26" rx="22" ry="16" fill="white"/>
+      <ellipse cx="82" cy="34" rx="18" ry="13" fill="white"/>
+      <ellipse cx="55" cy="42" rx="38" ry="11" fill="white"/>
+    </svg>
+
+    <!-- 雲朵 2 -->
+    <svg class="cloud cloud-2" viewBox="0 0 100 50">
+      <ellipse cx="25" cy="28" rx="18" ry="12" fill="white"/>
+      <ellipse cx="52" cy="22" rx="20" ry="14" fill="white"/>
+      <ellipse cx="76" cy="30" rx="16" ry="11" fill="white"/>
+      <ellipse cx="50" cy="36" rx="32" ry="9" fill="white"/>
+    </svg>
+
+    <!-- 蝴蝶 -->
+    <svg class="butterfly" viewBox="0 0 46 46">
+      <!-- 身體 -->
+      <ellipse cx="23" cy="23" rx="1.6" ry="9" fill="#3a2a1a"/>
+      <circle cx="23" cy="14" r="2.2" fill="#3a2a1a"/>
+      <!-- 觸角 -->
+      <path d="M 22 13 Q 19 8 16 7" stroke="#3a2a1a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <path d="M 24 13 Q 27 8 30 7" stroke="#3a2a1a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <circle cx="16" cy="7" r="1" fill="#3a2a1a"/>
+      <circle cx="30" cy="7" r="1" fill="#3a2a1a"/>
+      <!-- 右翅膀 -->
+      <g class="wing right">
+        <path d="M 23 18 Q 38 8 42 18 Q 42 24 32 24 Q 27 24 23 22 Z"
+              fill="#ff9ec7" stroke="#c54a8a" stroke-width="1.2"/>
+        <path d="M 23 24 Q 36 26 40 34 Q 38 40 30 38 Q 25 36 23 30 Z"
+              fill="#ffc7dc" stroke="#c54a8a" stroke-width="1.2"/>
+        <circle cx="35" cy="16" r="1.6" fill="#fff"/>
+        <circle cx="33" cy="32" r="1.4" fill="#fff"/>
+      </g>
+      <!-- 左翅膀(鏡像) -->
+      <g class="wing left">
+        <path d="M 23 18 Q 38 8 42 18 Q 42 24 32 24 Q 27 24 23 22 Z"
+              fill="#ff9ec7" stroke="#c54a8a" stroke-width="1.2"/>
+        <path d="M 23 24 Q 36 26 40 34 Q 38 40 30 38 Q 25 36 23 30 Z"
+              fill="#ffc7dc" stroke="#c54a8a" stroke-width="1.2"/>
+        <circle cx="35" cy="16" r="1.6" fill="#fff"/>
+        <circle cx="33" cy="32" r="1.4" fill="#fff"/>
+      </g>
+    </svg>
+  </div>
+
+  <h1>🥊 秀朗 415 的大亂鬥！🔨</h1>
+  <div class="subtitle">30 秒挑戰！看到同學就打，連擊有獎勵！</div>
 
   <div class="hud">
     <div class="chip"><span class="label">分數</span><span class="val" id="score">0</span></div>
@@ -342,8 +487,8 @@
 
   <div class="overlay" id="start-screen">
     <div class="card">
-      <h2>🎯 打地鼠</h2>
-      <div class="row">30 秒內盡量打中冒出的她</div>
+      <h2>🥊 秀朗 415 的大亂鬥！</h2>
+      <div class="row">30 秒內盡量打中冒出的同學</div>
       <div class="row">連擊 3 次以上有 +1 額外分數</div>
       <div class="row" style="margin-top:0.6rem;color:#8957e5;">最高分：<span id="best-2">0</span></div>
       <button id="start-2">▶️ 開始遊戲</button>
@@ -449,7 +594,7 @@
   </div>
 
   <footer>
-    Made with Claude Code × GitHub Pages · 看到誰就打誰
+    秀朗 415 班專屬版 · Made with Claude Code × GitHub Pages
   </footer>
 
 <script>
