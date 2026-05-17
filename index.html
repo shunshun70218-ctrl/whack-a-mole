@@ -419,16 +419,11 @@
 
         <!-- 頭部光暈背景（避免邊緣突兀） -->
         <circle cx="80" cy="62" r="60" fill="#f5d5b5" stroke="#3a2a1a" stroke-width="2.5"/>
-        <!-- 真人頭像（剪成圓） -->
-        <clipPath id="headClipPath">
-          <circle cx="80" cy="62" r="58"/>
-        </clipPath>
-        <image href="head.png" x="18" y="2" width="124" height="124"
-               clip-path="url(#headClipPath)" preserveAspectRatio="xMidYMid slice"/>
-        <!-- 一抹腮紅 -->
-        <ellipse cx="50" cy="80" rx="9" ry="5" fill="#ff8da1" opacity="0.45"/>
-        <ellipse cx="110" cy="80" rx="9" ry="5" fill="#ff8da1" opacity="0.45"/>
       </symbol>
+      <!-- 真人頭像剪成圓的 clipPath（每個洞會各自參照） -->
+      <clipPath id="headClipPath">
+        <circle cx="80" cy="62" r="58"/>
+      </clipPath>
     </defs>
   </svg>
 
@@ -468,10 +463,28 @@
   const $ = id => document.getElementById(id);
   const board = $('board');
 
-  // chibi SVG markup — uses <use href="#chibi">
+  // 5 張臉,每輪會洗牌一次,5 張都出現過才開始下一輪
+  const FACES = ['head.png', 'face-teacher.jpg', 'face-long.jpg', 'face-fu.jpg', 'face-er.jpg'];
+  let faceBag = [];
+  function nextFace() {
+    if (faceBag.length === 0) {
+      faceBag = FACES.slice();
+      for (let i = faceBag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [faceBag[i], faceBag[j]] = [faceBag[j], faceBag[i]];
+      }
+    }
+    return faceBag.shift();
+  }
+
+  // chibi SVG markup — uses <use href="#chibi">，臉部 image 與腮紅留在外面方便個別替換
   const chibiSvg = `
     <svg class="chibi" viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg">
       <use href="#chibi"/>
+      <image class="face-img" x="18" y="2" width="124" height="124"
+             clip-path="url(#headClipPath)" preserveAspectRatio="xMidYMid slice"/>
+      <ellipse cx="50" cy="80" rx="9" ry="5" fill="#ff8da1" opacity="0.45"/>
+      <ellipse cx="110" cy="80" rx="9" ry="5" fill="#ff8da1" opacity="0.45"/>
     </svg>`;
 
   const holes = [];
@@ -558,6 +571,8 @@
   function showMole(idx, lifetimeMs) {
     const h = holes[idx];
     h.classList.remove('down', 'hit', 'combo');
+    const faceImg = h.querySelector('.face-img');
+    if (faceImg) faceImg.setAttribute('href', nextFace());
     h.classList.add('up');
     const hideAt = performance.now() + lifetimeMs;
     const t = setTimeout(() => hideMole(idx, false), lifetimeMs);
@@ -601,6 +616,7 @@
 
   function start() {
     score = 0; combo = 0;
+    faceBag = [];
     timeLeft = ROUND_MS / 1000;
     $('score').textContent = 0;
     $('combo').textContent = 0;
